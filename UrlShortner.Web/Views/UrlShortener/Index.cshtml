@@ -1,0 +1,37 @@
+﻿@model UrlRequestModel
+@{
+    ViewData["Title"] = "URL Shortening Service";
+}
+
+<h2>URL Shortening Service</h2>
+
+<form asp-action="Index" method="post">
+    <div class="form-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LongUrl"></label>
+        <input asp-for="LongUrl" class="form-control" />
+        <span asp-validation-for="LongUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Length"></label>
+        <input asp-for="Length" class="form-control" />
+        <span asp-validation-for="Length" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Generate Short URL</button>
+</form>
+
+@if (ViewBag.ShortUrl != null)
+{
+    <div class="alert alert-success mt-3">
+        <strong>Short URL:</strong> <a href="@Url.Action("RedirectToLongUrl", "UrlShortener", new { shortUrl = ViewBag.ShortUrl }, Context.Request.Scheme)" target="_blank">@ViewBag.ShortUrl</a>
+
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
