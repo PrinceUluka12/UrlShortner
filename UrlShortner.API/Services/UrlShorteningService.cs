@@ -1,4 +1,5 @@
-﻿using UrlShortner.API.Models;
+﻿using Serilog;
+using UrlShortner.API.Models;
 using UrlShortner.API.Repository.IRepository;
 using UrlShortner.API.Services.IServices;
 
@@ -16,29 +17,41 @@ namespace UrlShortner.API.Services
 
         public async Task<string> CreateShortUrlAsync(string userName, string longUrl, int length)
 		{
-			var existingEntry = await _repository.GetByLongUrlAsync(longUrl);
-			if (existingEntry != null)
+			try
 			{
-				return existingEntry.ShortUrl;
+                var existingEntry = await _repository.GetByLongUrlAsync(longUrl);
+                if (existingEntry != null)
+                {
+                    Log.Debug("Long Url Already exixts in database");
+                    return existingEntry.ShortUrl;
+                }
+
+                string shortUrl;
+                do
+                {
+                    shortUrl = GenerateShortUrl(length);
+                } while (await _repository.GetByShortUrlAsync(shortUrl) != null);
+
+                var newEntry = new UrlEntry
+                {
+                    UserName = userName,
+                    LongUrl = longUrl,
+                    ShortUrl = shortUrl,
+                    ShortUrlLength = length,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _repository.CreateEntryAsync(newEntry);
+                return shortUrl;
+            }
+			catch (Exception ex )
+			{
+
+                Log.Error("Error in CreateShortUrlAsync Method", ex.Message);
+                return null;
+    
 			}
-
-			string shortUrl;
-			do
-			{
-				shortUrl = GenerateShortUrl(length);
-			} while (await _repository.GetByShortUrlAsync(shortUrl) != null);
-
-			var newEntry = new UrlEntry
-			{
-				UserName = userName,
-				LongUrl = longUrl,
-				ShortUrl = shortUrl,
-				ShortUrlLength = length,
-				CreatedAt = DateTime.UtcNow
-			};
-
-			await _repository.CreateEntryAsync(newEntry);
-			return shortUrl;
+			
 		}
 	
 
@@ -51,15 +64,26 @@ namespace UrlShortner.API.Services
 
         public async Task<string> GetShortUrlAsync(string shortUrl)
         {
-            var existingEntry = await _repository.GetByShortUrlAsync(shortUrl);
-            if (existingEntry != null)
+            try
             {
-                return existingEntry.LongUrl;
+                var existingEntry = await _repository.GetByShortUrlAsync(shortUrl);
+                if (existingEntry != null)
+                {
+                    return existingEntry.LongUrl;
+                }
+                else
+                {
+
+                    Log.Error($"Short Url {shortUrl} does not exist");
+                    return null;
+                }
             }
-			else
-			{
-				return null;
-			}
+            catch (Exception ex)
+            {
+                Log.Error("Error in GetShortUrlAsync Method", ex.Message);
+                return null;
+            }
+           
         }
     }
 }

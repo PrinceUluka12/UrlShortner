@@ -4,11 +4,11 @@ using UrlShortner.API.Repository.IRepository;
 using UrlShortner.API.Repository;
 using UrlShortner.API.Services;
 using UrlShortner.API.Services.IServices;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -30,9 +30,17 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
+//builder.Host.UseSerilog();
+
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration).CreateLogger();
+
 
 var app = builder.Build();
 app.UseCors("AllowSpecificOrigin");
+
+//app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
