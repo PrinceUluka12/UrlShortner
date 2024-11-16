@@ -11,32 +11,30 @@ The URL Shortening Service is a full-stack web application built with ASP.NET Co
 
 ## Table of Contents
 
-- Technologies Used
+- [Technologies Used](#technologies-used)
 
-- Architecture
+- [Architecture](#architecture)
 
-- Prerequisites
+- [Prerequisites](#prerequisites)
 
-- Setup and Installation
+- [Setup and Installation](#setup-and-installation))
 
-- Running the Project
+- [Running the Project](#running-the-project)
 
-- API Documentation
+- [API Documentation](#api-documentation)
 
-- Front-End Usage
+- [Front-End Usage](#front-end-usage)
 
-- Troubleshooting
-
-- License
+- [Troubleshooting](#troubleshooting)
 
 ## Technologies Used
 
-## Back End (API)
+  **Back End (API)**
 
 - ASP.NET Core 7.0
 - Entity Framework Core
 - SQL Server for data persistence
-## Front End
+   **Front End**
 - React (Create React App)
 - Axios for HTTP requests
 - Bootstrap 4.5 for styling
@@ -55,7 +53,7 @@ Before setting up the project, ensure you have:
 - SQL Server installed locally or on a server
 - Visual Studio 2022 or Visual Studio Code
 
-## Setup and Installation
+## Setup and Installation 
 ## 1. Back-End (API)
    1. Clone the repository:
         ```
