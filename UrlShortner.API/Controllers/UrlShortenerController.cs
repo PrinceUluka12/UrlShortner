@@ -20,20 +20,20 @@ namespace UrlShortner.API.Controllers
 		[HttpPost("shorten")]
 		public async Task<IActionResult> ShortenUrl([FromBody] UrlRequest request)
 		{
-			var shortUrl = await _service.CreateOrGetShortUrlAsync(request.UserName, request.LongUrl, request.Length);
+			var shortUrl = await _service.CreateShortUrlAsync(request.UserName, request.LongUrl, request.Length);
 			return Ok(new { ShortUrl = shortUrl });
 		}
 
-		/*[HttpGet("{shortUrl}")]
+		[HttpGet("{shortUrl}")]
 		public async Task<IActionResult> RedirectToLongUrl(string shortUrl)
 		{
-			var entry = await _service.CreateOrGetShortUrlAsync(shortUrl);
+			var entry = await _service.GetShortUrlAsync(shortUrl);
 			if (entry == null)
 			{
 				return NotFound("URL not found");
 			}
 
-			return Redirect(entry.LongUrl);
-		}*/
+			return Ok(new { LongUrl =  entry});
+		}
 	}
 }

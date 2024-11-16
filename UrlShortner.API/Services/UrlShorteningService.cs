@@ -14,7 +14,7 @@ namespace UrlShortner.API.Services
 			_repository = repository;
 		}
 
-        public async Task<string> CreateOrGetShortUrlAsync(string userName, string longUrl, int length)
+        public async Task<string> CreateShortUrlAsync(string userName, string longUrl, int length)
 		{
 			var existingEntry = await _repository.GetByLongUrlAsync(longUrl);
 			if (existingEntry != null)
@@ -48,5 +48,18 @@ namespace UrlShortner.API.Services
 			return new string(Enumerable.Repeat(Characters, length)
 				.Select(s => s[random.Next(s.Length)]).ToArray());
 		}
-	}
+
+        public async Task<string> GetShortUrlAsync(string shortUrl)
+        {
+            var existingEntry = await _repository.GetByShortUrlAsync(shortUrl);
+            if (existingEntry != null)
+            {
+                return existingEntry.LongUrl;
+            }
+			else
+			{
+				return null;
+			}
+        }
+    }
 }
