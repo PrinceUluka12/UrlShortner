@@ -17,7 +17,7 @@ const HomePage = () => {
         length
       });
 
-      setShortUrl(response.data.shortUrl);
+      setShortUrl(response.data.result.shortUrl);
     } catch (error) {
       console.error('Error creating short URL:', error);
       alert('An error occurred while generating the short URL.');

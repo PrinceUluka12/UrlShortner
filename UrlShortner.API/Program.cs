@@ -30,7 +30,7 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
-//builder.Host.UseSerilog();
+builder.Host.UseSerilog();
 
 
 Log.Logger = new LoggerConfiguration()
@@ -40,7 +40,17 @@ Log.Logger = new LoggerConfiguration()
 var app = builder.Build();
 app.UseCors("AllowSpecificOrigin");
 
-//app.UseSerilogRequestLogging();
+// Ensure the database is created and migrations are applied
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // Apply any pending migrations and create the database if not exists
+    dbContext.Database.Migrate();
+}
+
+
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -12,10 +12,12 @@ namespace UrlShortner.API.Controllers
 	public class UrlShortenerController : ControllerBase
 	{
 		private readonly IUrlShorteningService _service;
+		private readonly ResponseDto _response;
 
         public UrlShortenerController(IUrlShorteningService service)
         {
 			_service = service;
+			_response = new ResponseDto();
 		}
 
 		[HttpPost("shorten")]
@@ -25,7 +27,8 @@ namespace UrlShortner.API.Controllers
 			{
                 var shortUrl = await _service.CreateShortUrlAsync(request.UserName, request.LongUrl, request.Length);
                 Log.Information(shortUrl);
-                return Ok(new { ShortUrl = shortUrl });
+				_response.Result = new { ShortUrl = shortUrl };
+                return Ok(_response);
             }
 			catch (Exception ex)
 			{
@@ -40,13 +43,16 @@ namespace UrlShortner.API.Controllers
 		{
 			try
 			{
-                var entry = await _service.GetShortUrlAsync(shortUrl);
+                var entry = await _service.GetLongUrlAsync(shortUrl);
                 if (entry == null)
                 {
-                    return NotFound("URL not found");
+					_response.IsSuccess = false;
+					_response.Message = "URL not found";
+                    return NotFound(_response);
                 }
                 Log.Information(entry);
-                return Ok(new { LongUrl = entry });
+				_response.Result = new { LongUrl = entry };
+                return Ok(_response);
             }
 			catch (Exception ex)
 			{

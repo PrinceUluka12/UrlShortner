@@ -62,7 +62,7 @@ namespace UrlShortner.API.Services
 				.Select(s => s[random.Next(s.Length)]).ToArray());
 		}
 
-        public async Task<string> GetShortUrlAsync(string shortUrl)
+        public async Task<string> GetLongUrlAsync(string shortUrl)
         {
             try
             {

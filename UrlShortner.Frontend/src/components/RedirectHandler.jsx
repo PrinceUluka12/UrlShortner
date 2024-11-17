@@ -13,9 +13,10 @@ const RedirectHandler = () => {
             const response = await axios.get(`https://localhost:7038/api/UrlShortener/${shortUrl}`);
             
             setTimeout(() => {
+              console.log(response.status)
               // Redirect to the original long URL
-            if (response.status === 200) {              
-              window.open(response.data.longUrl, '_blank');
+            if (response.status === 200 && response.data.isSuccess == true) {              
+              window.open(response.data.result.longUrl, '_blank');
               window.close();
             } else {
               navigate('/not-found'); // Navigate to a "Not Found" page if the URL isn't found
