@@ -7,55 +7,65 @@ using UrlShortner.API.Services.IServices;
 
 namespace UrlShortner.API.Controllers
 {
-	[Route("api/[controller]")]
+    // Controller for handling URL shortening-related requests
+    [Route("api/[controller]")]
 	[ApiController]
 	public class UrlShortenerController : ControllerBase
 	{
 		private readonly IUrlShorteningService _service;
 		private readonly ResponseDto _response;
 
+        // Constructor to inject the URL shortening service
         public UrlShortenerController(IUrlShorteningService service)
         {
 			_service = service;
 			_response = new ResponseDto();
 		}
-
-		[HttpPost("shorten")]
+        // Endpoint for creating a shortened URL
+        [HttpPost("shorten")]
 		public async Task<IActionResult> ShortenUrl([FromBody] UrlRequest request)
 		{
-			try
+            if (!ModelState.IsValid)
+            {
+                // Return bad request if input validation fails
+                return BadRequest(ModelState);
+            }
+            try
 			{
+                // Call the service to create or get the shortened URL
                 var shortUrl = await _service.CreateShortUrlAsync(request.UserName, request.LongUrl, request.Length);
-                Log.Information(shortUrl);
 				_response.Result = new { ShortUrl = shortUrl };
                 return Ok(_response);
             }
 			catch (Exception ex)
 			{
+                // Log the error and return a 500 Internal Server Error
                 Log.Error(ex, "An error occurred while creating the short URL for user {UserName}", request.UserName);
                 return StatusCode(500, new { Message = "An unexpected error occurred while processing your request. Please try again later." });
             }
 			
 		}
-
-		[HttpGet("{shortUrl}")]
+        // Endpoint for retrieving long URL using the shortened URL
+        [HttpGet("{shortUrl}")]
 		public async Task<IActionResult> RedirectToLongUrl(string shortUrl)
 		{
 			try
 			{
+                // Retrieve the original URL by the shortened version
                 var entry = await _service.GetLongUrlAsync(shortUrl);
                 if (entry == null)
                 {
-					_response.IsSuccess = false;
+                    // Return URL not found if the shortened URL is not found in the DB
+                    _response.IsSuccess = false;
 					_response.Message = "URL not found";
                     return NotFound(_response);
                 }
-                Log.Information(entry);
 				_response.Result = new { LongUrl = entry };
                 return Ok(_response);
             }
 			catch (Exception ex)
 			{
+                // Log the error and return a 500 Internal Server Error
                 Log.Error(ex, "An error occurred while redirecting short URL: {ShortUrl}", shortUrl);
                 return StatusCode(500, new { Message = "An unexpected error occurred. Please try again later." });
             }

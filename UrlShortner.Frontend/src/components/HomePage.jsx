@@ -1,24 +1,29 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// Component for the home page where users can create shortened URLs
 const HomePage = () => {
+  // State hooks for managing form inputs and the response
   const [userName, setUserName] = useState('');
   const [longUrl, setLongUrl] = useState('');
   const [length, setLength] = useState(8);
   const [shortUrl, setShortUrl] = useState(null);
 
+   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault();// Prevent default form submission behavior
 
     try {
+      // Make a POST request to the API to create a shortened URL
       const response = await axios.post('https://localhost:7038/api/UrlShortener/shorten', {
         userName,
         longUrl,
         length
       });
-
+// Set the response data (short URL) in the state
       setShortUrl(response.data.result.shortUrl);
     } catch (error) {
+       // Log the error and display an alert if the request fails
       console.error('Error creating short URL:', error);
       alert('An error occurred while generating the short URL.');
     }
@@ -66,6 +71,7 @@ const HomePage = () => {
           <button type="submit" className="btn btn-primary w-100">Generate Short URL</button>
         </form>
 
+          {/* Display the generated short URL if available */}
         {shortUrl && (
           <div className="alert alert-success mt-4 text-center">
             <h4>Generated Short URL:</h4>

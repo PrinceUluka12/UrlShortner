@@ -2,8 +2,12 @@ import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+
+// Component responsible for handling the redirection logic
 const RedirectHandler = () => {
+  // Extract the shortUrl parameter from the route
     const { shortUrl } = useParams();
+     // Hook to programmatically navigate the user
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -14,24 +18,26 @@ const RedirectHandler = () => {
             
             setTimeout(() => {
               console.log(response.status)
-              // Redirect to the original long URL
+              // If the response is successful (status 200), open the URL in a new tab
             if (response.status === 200 && response.data.isSuccess == true) {              
               window.open(response.data.result.longUrl, '_blank');
               window.close();
             } else {
-              navigate('/not-found'); // Navigate to a "Not Found" page if the URL isn't found
+               // If not found, navigate to the 'not-found' page
+              navigate('/not-found'); 
             }
             }, 3000)
             
           } catch (error) {
+            // Log the error and navigate to the 'error' page if there's an issue with the request
             console.error('Error fetching the original URL:', error);
-            navigate('/error'); // Navigate to an error page if there is an issue with the request
+            navigate('/error'); 
           }
         };
-    
+           // Trigger the redirection logic when the component mounts
         redirectToLongUrl();
       }, [shortUrl, navigate]);
-    
+    // Display a loading message while the redirection is processed
       return (
         <div className="container text-center mt-5">
           <div className="spinner-border text-primary" role="status">
