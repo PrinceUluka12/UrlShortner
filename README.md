@@ -57,8 +57,8 @@ Before setting up the project, ensure you have:
 ## 1. Back-End (API)
    1. Clone the repository:
         ```
-        git clone https://github.com/yourusername/url-shortener-api.git
-        cd url-shortener-api
+        git clone https://github.com/PrinceUluka12/UrlShortner.git
+        cd UrlShortener.API
         ```
       
   2. **Install dependencies**: Ensure your .NET environment is set up and run:
@@ -80,7 +80,7 @@ The API should be accessible at https://localhost:7038.
 ## 2. Front-End (React)
    1. **Navigate to the React project:**
          ```
-         cd url-shortener-frontend
+         cd UrlShortener.Frontend
          ```
    2. **Install dependencies:**
          ```
