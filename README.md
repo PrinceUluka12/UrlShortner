@@ -17,7 +17,7 @@ The URL Shortening Service is a full-stack web application built with ASP.NET Co
 
 - [Prerequisites](#prerequisites)
 
-- [Setup and Installation](#setup-and-installation))
+- [Setup and Installation](#setup-and-installation)
 
 - [Running the Project](#running-the-project)
 
@@ -74,7 +74,7 @@ Before setting up the project, ensure you have:
   4. **Run the API:**
       ```
      dotnet run
-      ``
+      ```
 The API should be accessible at https://localhost:7038. 
 
 ## 2. Front-End (React)
@@ -120,16 +120,30 @@ Note: CORS policies should be configured to allow requests from the React app to
   
 - **Response:**
    ```
-   {
-  "shortUrl": "abcd1234"
-   }
+  {
+    "isSuccess": true,
+    "message": "Successful",
+    "result": {
+        "shortUrl": "vcmNEFgs"
+    }
+  }
    ```
 
 **Endpoint:** `GET /redirect/{shortUrl}`
-- Description: Redirects to the original long URL associated with the shortened URL.
+- **Description**: Uses to short url to fetch the long url from the database.
   
-- Path Parameter:
-   - shortUrl: The generated shortened URL.
+- **Path Parameter**:
+   - shortUrl: The generated shortened URL.  Example  -  https://localhost:7038/api/UrlShortener/vcmNEFgs
+- **Response**:
+     ```
+     {
+    "isSuccess": true,
+    "message": "Successful",
+    "result": {
+       "longUrl": "https://example.com/long-url-example"
+      }
+     }
+     ```
 
 # **Front-End Usage**
      
